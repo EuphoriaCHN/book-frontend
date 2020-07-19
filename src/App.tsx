@@ -11,6 +11,8 @@ import Router from 'Router';
 import Footer from 'component/Footer/Footer';
 import Sider from 'component/Sider/Sider';
 
+import './common/style/base.scss';
+
 type IProps = H.History;
 
 const App: React.FC<IProps> = (props: IProps): React.ReactElement => (
@@ -18,7 +20,7 @@ const App: React.FC<IProps> = (props: IProps): React.ReactElement => (
     <HashRouter>
       <Layout>
         <Sider />
-        <Layout className={'container'}>
+        <Layout className={'layout-container'}>
           <Header />
           <Router />
           <Footer />

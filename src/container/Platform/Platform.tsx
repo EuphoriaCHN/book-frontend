@@ -6,8 +6,11 @@ import './Platform.scss'
 type IProps = WithTranslation;
 
 const Platform: React.SFC<IProps> = props => {
+  const [pageSize, setPageSize] = React.useState<number>(10);
+  const [currentIndex, setCurrentIndex] = React.useState<number>(1);
+
   const render = React.useMemo<JSX.Element>(() => (
-    <h1>Platform</h1>
+    <div className={'platcorm container'}>123</div>
   ), []);
 
   return render;
