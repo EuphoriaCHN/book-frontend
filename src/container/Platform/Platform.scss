@@ -1,0 +1,14 @@
+.platform {
+  &-header {
+    margin-bottom: 20px;
+  }
+
+  &-content {
+    margin-bottom: 48px;
+  }
+
+  &-footer {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

@@ -1,9 +1,20 @@
 import { message } from 'antd';
 
 import { AxiosResponse } from 'axios';
-import { RESPONSE_DATA } from 'common/interfaces';
+import { RESPONSE_DATA } from '../api.interface';
 
-import { HTTP_STATUS_CODE, STATUS_CODE } from '../constants/constants';
+export enum HTTP_STATUS_CODE {
+  SUCCESS = 200,
+  PAGE_NOT_FOUNT = 404,
+  INTERNAL_ERROR = 500
+};
+
+export enum STATUS_CODE {
+  SUCCESS = 1000,
+  COMMON_ERROR = 1001,
+  NOT_LOGIN = 1002,
+  PERMISSION_DENIED = 1003
+};
 
 interface IProps {
   [key: string]: any;
@@ -38,7 +49,7 @@ export const errHandling = (
           case STATUS_CODE.SUCCESS:
             resolve(value.data.data);
             break;
-          case STATUS_CODE.ERROR:
+          case STATUS_CODE.COMMON_ERROR:
           case STATUS_CODE.PERMISSION_DENIED:
           default:
             message.error(errMsg || JSON.stringify(e));
@@ -63,7 +74,7 @@ export const errHandling = (
  */
 export function debounce(func: Function, wait: number, immediate: boolean = false) {
   let timeout: NodeJS.Timeout = null;
-  return function() {
+  return function () {
     const context = this;
     const args = arguments;
     const later = function () {

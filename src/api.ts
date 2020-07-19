@@ -21,18 +21,19 @@ type AxiosRequest = {
   data?: {};
 };
 
+const prefix = '/api';
+
 const request: (params: AxiosRequest) => Promise<AxiosResponse<I.RESPONSE_DATA>> = (params) =>
   axios({
     method: params.method,
-    url: params.url,
+    url: `${prefix}${params.url}`,
     params: params.params || {},
     data: params.data || {}
   });
 
-const prefix = '/api';
-
 // PING
-export const PING = () => request({
+export const GET_BOOK_LIST = (query: I.IGetBookList) => request({
   method: 'get',
-  url: `${prefix}/ping`,
+  url: `/book/getBookList`,
+  params: query,
 });

@@ -1,0 +1,22 @@
+.book-card {
+  position: relative;
+  height: 78%;
+  width: 85px;
+  padding: 8px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  z-index: 2;
+  box-shadow: 0 3px 3px #c8c8c8;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  writing-mode: tb-rl;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    box-shadow: 0 3px 6px #4895fa;
+    transform: translateY(-4px);
+  }
+}
