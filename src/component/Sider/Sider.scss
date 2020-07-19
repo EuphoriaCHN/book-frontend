@@ -1,0 +1,21 @@
+.sider {
+  user-select: none;
+
+  .title {
+    margin: 0;
+    padding: 0;
+    height: 44px;
+    width: 100%;
+    text-align: center;
+    line-height: 48px;
+    color: #fff;
+    user-select: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .collapsed-title {
+    height: 3px;
+  }
+}

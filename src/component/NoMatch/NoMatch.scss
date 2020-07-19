@@ -1,0 +1,26 @@
+.no-match {
+  position: absolute;
+  top: 0;
+  left: -8px; // hack
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  z-index: 9999;
+  background-color: #fff;
+
+  &-description {
+    color: rgba(25, 25, 25, 0.6);
+    font-size: 20px;
+    line-height: 28px;
+  }
+
+  &-button-list {
+    > button:first-child {
+      margin-right: 8px;
+    }
+  }
+}

@@ -1,0 +1,35 @@
+.header {
+  height: 48px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0 24px;
+  background-color: rgb(250, 250, 250);
+  border-bottom: 1px solid rgba(25, 25, 25, 0.1);
+
+  .say-hello {
+    height: 24px;
+    line-height: 24px;
+    user-select: none;
+    margin-right: 8px;
+
+    > span {
+      display: inline-block;
+      margin-left: 8px;
+    }
+  }
+
+  .log-out {
+    margin-left: -8px;
+    margin-right: 8px;
+  }
+}
+
+.local-activity {
+  color: #5da8f7;
+
+  > span:first-child {
+    margin-right: 8px;
+  }
+}
