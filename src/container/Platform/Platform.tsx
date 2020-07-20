@@ -71,7 +71,8 @@ const Platform: React.SFC<IProps> = props => {
   }, []);
 
   const handleDebounceSearch = React.useCallback<(text: string) => void>(debounce(text => {
-    loadData(null, null, text);
+    setCurrentIndex(1);
+    loadData(null, 1, text);
   }, 500), []);
 
   const onSearch = React.useCallback<(event: React.ChangeEvent<HTMLInputElement>) => void>(event => {
