@@ -27,14 +27,14 @@ const Platform: React.SFC<IProps> = props => {
   const [data, setData] = React.useState<Array<Books>>([]);
 
   const loadData = React.useCallback<
-    (_pageSize?: number, _currentIndex?: number) => Promise<unknown>
-  >(async (_pageSize, _currentIndex) => {
+    (_pageSize?: number, _currentIndex?: number, _searchText?: string) => Promise<unknown>
+  >(async (_pageSize, _currentIndex, _searchText = '') => {
     setLoading(true);
     const limit = _pageSize || pageSize;
     const offset = ((_currentIndex || currentIndex) - 1) * pageSize;
 
     try {
-      const data = await errHandling(GET_BOOK_LIST, { limit, offset });
+      const data = await errHandling(GET_BOOK_LIST, { limit, offset, searchText: _searchText });
 
       setTotal(data.count.length);
       setData(data.rows);
@@ -53,7 +53,7 @@ const Platform: React.SFC<IProps> = props => {
   }, []);
 
   const renderBarList = React.useMemo<Array<JSX.Element>>(() => (
-    Array(Math.floor(pageSize / 4)).fill(1).map((_, index: number) => (
+    Array(Math.ceil(data.length / 4)).fill(1).map((_, index: number) => (
       <Bar key={index} books={data.slice(index * 4, index * 4 + 4)} />
     ))
   ), [pageSize, currentIndex, data]);
@@ -70,13 +70,21 @@ const Platform: React.SFC<IProps> = props => {
     loadData(newPageSize, newCurrent);
   }, []);
 
+  const handleDebounceSearch = React.useCallback<(text: string) => void>(debounce(text => {
+    loadData(null, null, text);
+  }, 500), []);
+
+  const onSearch = React.useCallback<(event: React.ChangeEvent<HTMLInputElement>) => void>(event => {
+    handleDebounceSearch(event.target.value);
+  }, [handleDebounceSearch]);
+
   const render = React.useMemo<JSX.Element>(() => (
     <div className={'platform container'}>
       <header className={'platform-header'}>
         <h2>{props.t('书本列表')}</h2>
         <Input.Search
           placeholder={props.t('按照书名/关键字搜索')}
-          onSearch={value => console.log(value)}
+          onChange={onSearch}
           style={{ width: 300, height: 30 }}
         />
       </header>
