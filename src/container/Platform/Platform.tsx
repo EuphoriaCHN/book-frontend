@@ -173,7 +173,7 @@ const Platform: React.SFC<IProps> = props => {
             defaultActiveFirstOption={false}
             allowClear
             showSearch
-            value={searchValue}
+            value={searchValue === '' ? null : searchValue}
           >
             {renderSearchOptions}
           </Select>
