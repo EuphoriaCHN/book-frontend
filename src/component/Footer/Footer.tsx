@@ -10,8 +10,8 @@ const Footer: React.FC<IProps> = props => {
     () => (
       <footer className={'footer'}>
         <span>Copyright &copy; 2020 </span>
-        <a target="__blank" href="https://www.xust-kcsoft.club" rel="noopener noreferrer">
-          Xi'an University of Science & Technology KCSoft Laboratory.
+        <a target="__blank" href="https://www.wqh4u.cn" rel="noopener noreferrer">
+          Wang Qinhong.
         </a>
         <span>All Rights Reserved.</span>
       </footer>
