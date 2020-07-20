@@ -4,7 +4,6 @@ import { Pagination, Spin, Empty, message, Input } from 'antd';
 import Bar from 'component/Bar/Bar';
 import { GET_BOOK_LIST } from 'api';
 import { errHandling, debounce } from '@utils/util';
-import { AudioOutlined } from '@ant-design/icons';
 
 import './Platform.scss'
 

@@ -60,7 +60,7 @@ const developmentConfig = webpackMerge(baseWebpackConfig, {
   ],
   devServer: {
     contentBase: path.join(OUTPUT_PATH, 'asserts'),
-    port: 4000,
+    port: 8001,
     compress: true,
     open: true,
     openPage: '',

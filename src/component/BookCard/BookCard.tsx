@@ -16,7 +16,9 @@ const BookCard: React.SFC<IProps> = props => {
 
   const render = React.useMemo<JSX.Element>(() => (
     <Tooltip title={_title}>
-      <div className={'book-card'}>{_title}</div>
+      <div className={'book-card'}>
+        <p>{_title}</p>
+      </div>
     </Tooltip>
   ), [_title]);
 
