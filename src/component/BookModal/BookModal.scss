@@ -1,6 +1,11 @@
 $bookModalContentChildrenWidth: 40%;
 $bookModalContentChildrenHeight: 90%;
 
+$bookBorderRadiusRight: 15px;
+$bookBorderRadiusLeft: 5px;
+
+$cardHeight: 350px;
+
 @mixin bookModalContentChildren {
   width: $bookModalContentChildrenWidth;
   height: $bookModalContentChildrenHeight;
@@ -11,7 +16,7 @@ $bookModalContentChildrenHeight: 90%;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  height: 350px;
+  height: $cardHeight;
   width: 100%;
 
   &-image {
@@ -26,7 +31,57 @@ $bookModalContentChildrenHeight: 90%;
   }
 
   &-book {
+    position: relative;
+    display: flex;
+    align-items: center;
+
     @include bookModalContentChildren();
     border: 1px solid;
+
+    border-top-right-radius: $bookBorderRadiusRight;
+    border-bottom-right-radius: $bookBorderRadiusRight;
+    border-top-left-radius: $bookBorderRadiusLeft;
+    border-bottom-left-radius: $bookBorderRadiusLeft;
+
+    background-color: #fed854;
+
+    transition: all 0.3s ease-in-out;
+
+    &-menu {
+      position: relative;
+      width: 100%;
+      height: 100px;
+      background-color: #e8e8e0;
+      box-sizing: border-box;
+      padding: 8px;
+      overflow: hidden;
+      font-weight: 700;
+
+      &:after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 20px;
+        bottom: 0;
+        left: 0;
+        background-color: #cddd39;
+      }
+    }
+
+    &-rope {
+      position: absolute;
+      top: -3px;
+      right: 30px;
+
+      height: 320px;
+      width: 10px;
+      border-radius: 2px;
+
+      background: linear-gradient(90deg, #efbc1b 10%, #f8cd39 10%);
+    }
+
+    &:hover {
+      box-shadow: 0 4px 10px 10px #ccc;
+    }
   }
 }

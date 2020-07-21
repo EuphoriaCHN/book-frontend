@@ -77,7 +77,12 @@ const BookModal: React.SFC<IProps> = props => {
               <DztImageGalleryComponent images={getImageGallaryConfig} />
             </div>
           </Tooltip>
-          <div className={'book-modal-content-book'}></div>
+          <Tooltip title={props.t('阅读书籍')}>
+            <div className={'book-modal-content-book'}>
+              <div className={'book-modal-content-book-menu'}>{getBookTitle}</div>
+              <div className={'book-modal-content-book-rope'} />
+            </div>
+          </Tooltip>
         </div>
       </Modal>
     </React.Fragment>
