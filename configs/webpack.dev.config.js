@@ -72,6 +72,12 @@ const developmentConfig = webpackMerge(baseWebpackConfig, {
         changeOrigin: true,
         secure: false,
       },
+      '/static': {
+        target: 'http://127.0.0.1:8000',
+        pathRewrite: { '^/static': '' },
+        changeOrigin: true,
+        secure: false,
+      }
     },
   },
 });

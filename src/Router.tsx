@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 
 import Platform from 'container/Platform/Platform';
 import About from 'container/About/About';
+import BookDetail from 'container/BookDetail/BookDetail';
 
 import NoMatch from 'component/NoMatch/NoMatch';
 
@@ -21,6 +22,7 @@ const Router: React.FC<IProps> = observer(() => (
     <Switch>
       <Route path="/platform" component={Platform} />
       <Route path="/about" component={About} />
+      <Route path="/book/:bookId" component={BookDetail} />
       <Route exact path="/" component={Platform} />
       <Route component={NoMatch} />
     </Switch>

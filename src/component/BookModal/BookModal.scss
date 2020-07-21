@@ -1,0 +1,32 @@
+$bookModalContentChildrenWidth: 40%;
+$bookModalContentChildrenHeight: 90%;
+
+@mixin bookModalContentChildren {
+  width: $bookModalContentChildrenWidth;
+  height: $bookModalContentChildrenHeight;
+  cursor: pointer;
+}
+
+.book-modal-content {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 350px;
+  width: 100%;
+
+  &-image {
+    @include bookModalContentChildren();
+    overflow: hidden;
+    border: 1px solid;
+    border-radius: 3px;
+
+    > div {
+      padding: 0;
+    }
+  }
+
+  &-book {
+    @include bookModalContentChildren();
+    border: 1px solid;
+  }
+}

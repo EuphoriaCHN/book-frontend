@@ -9,3 +9,9 @@ export type IGetBookList = {
   offset?: number;
   limit?: number;
 };
+
+// GET BOOK XMIND IMAGE
+export type IGetBookXmindImage = {
+  imageName: string;
+  mock?: boolean;
+};

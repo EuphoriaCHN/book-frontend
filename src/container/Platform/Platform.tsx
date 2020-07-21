@@ -4,6 +4,9 @@ import { Pagination, Spin, Empty, message, Select, Tag } from 'antd';
 import Bar from 'component/Bar/Bar';
 import { GET_BOOK_LIST } from 'api';
 import { errHandling, debounce } from '@utils/util';
+import { observer } from 'mobx-react';
+import ProjectStore from 'store/project';
+import BookModal from 'component/BookModal/BookModal';
 
 import './Platform.scss'
 
@@ -31,7 +34,7 @@ export type Books = {
   keyword3: string;
 };
 
-const Platform: React.SFC<IProps> = props => {
+const Platform: React.SFC<IProps> = observer(props => {
   const [pageSize, setPageSize] = React.useState<number>(12);
   const [currentIndex, setCurrentIndex] = React.useState<number>(1);
   const [total, setTotal] = React.useState<number>(0);
@@ -157,46 +160,49 @@ const Platform: React.SFC<IProps> = props => {
   }, [keywordDict, selectKeywordID]);
 
   const render = React.useMemo<JSX.Element>(() => (
-    <div className={'platform container'}>
-      <header className={'platform-header'}>
-        <h2>{props.t('书本列表')}</h2>
-        <div className={'platform-header-operation'}>
-          <Select
-            placeholder={props.t('按照书名/关键字搜索')}
-            onSearch={onSearch}
-            onChange={onSearchTextChange}
-            style={{ width: 300, height: 30 }}
-            loading={loading}
-            notFoundContent={null}
-            filterOption={false}
-            showArrow={false}
-            defaultActiveFirstOption={false}
-            allowClear
-            showSearch
-            value={searchValue === '' ? null : searchValue}
-          >
-            {renderSearchOptions}
-          </Select>
-          {renderKeywordAssociation}
-        </div>
-      </header>
-      <Spin spinning={loading}>
-        <div className={'platform-content'}>
-          {renderDataCollection}
-        </div>
-        <footer className={'platform-footer'}>
-          <Pagination
-            total={total}
-            pageSize={pageSize}
-            current={currentIndex}
-            pageSizeOptions={['12', '24', '36']}
-            onChange={handleOnPaginationChange}
-            showTotal={total => props.t('共 {{total}} 本书籍', { total })}
-            hideOnSinglePage
-          />
-        </footer>
-      </Spin>
-    </div>
+    <React.Fragment>
+      <div className={'platform container'}>
+        <header className={'platform-header'}>
+          <h2>{props.t('书本列表')}</h2>
+          <div className={'platform-header-operation'}>
+            <Select
+              placeholder={props.t('按照书名/关键字搜索')}
+              onSearch={onSearch}
+              onChange={onSearchTextChange}
+              style={{ width: 300, height: 30 }}
+              loading={loading}
+              notFoundContent={null}
+              filterOption={false}
+              showArrow={false}
+              defaultActiveFirstOption={false}
+              allowClear
+              showSearch
+              value={searchValue === '' ? null : searchValue}
+            >
+              {renderSearchOptions}
+            </Select>
+            {renderKeywordAssociation}
+          </div>
+        </header>
+        <Spin spinning={loading}>
+          <div className={'platform-content'}>
+            {renderDataCollection}
+          </div>
+          <footer className={'platform-footer'}>
+            <Pagination
+              total={total}
+              pageSize={pageSize}
+              current={currentIndex}
+              pageSizeOptions={['12', '24', '36']}
+              onChange={handleOnPaginationChange}
+              showTotal={total => props.t('共 {{total}} 本书籍', { total })}
+              hideOnSinglePage
+            />
+          </footer>
+        </Spin>
+      </div>
+      <BookModal visible={ProjectStore.bookModalVisible} book={ProjectStore.modalBooks} />
+    </React.Fragment>
   ), [
     renderDataCollection,
     props.i18n.language,
@@ -206,10 +212,11 @@ const Platform: React.SFC<IProps> = props => {
     loading,
     renderSearchOptions,
     renderKeywordAssociation,
-    searchValue
+    searchValue,
+    ProjectStore.bookModalVisible
   ]);
 
   return render;
-};
+});
 
 export default withTranslation()(Platform);

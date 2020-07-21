@@ -15,7 +15,7 @@ axios.interceptors.response.use(
 );
 
 type AxiosRequest = {
-  method: 'get' | 'GET' | 'post' | 'POST';
+  method?: 'get' | 'GET' | 'post' | 'POST';
   url: string;
   params?: {};
   data?: {};
@@ -25,15 +25,21 @@ const prefix = '/api';
 
 const request: (params: AxiosRequest) => Promise<AxiosResponse<I.RESPONSE_DATA>> = (params) =>
   axios({
-    method: params.method,
+    method: params.method || 'get',
     url: `${prefix}${params.url}`,
     params: params.params || {},
     data: params.data || {}
   });
 
-// PING
 export const GET_BOOK_LIST = (query: I.IGetBookList) => request({
   method: 'get',
   url: `/book/getBookList`,
   params: query,
 });
+
+export const MAKE_BOOK_IMAGE_URL = (query: I.IGetBookXmindImage) => {
+  if (query.mock) {
+    return `${window.location.protocol}/static/images/1001中华人民共和国安全生产法.png`;
+  }
+  return `${window.location.protocol}/static/images/${query.imageName}.png`;
+};
