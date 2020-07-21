@@ -13,5 +13,11 @@
     "Node 端研发": "Node R&D",
     "Server 研发": "Server R&D",
     "前端技术栈": "Front-end technology stack",
-    "后端技术栈": "Back-end technology stack"
+    "后端技术栈": "Back-end technology stack",
+    "点击查看大图": "click to view bigger image",
+    "阅读书籍": "Reading books",
+    "获取图书列表失败": "Failed to get book list",
+    "联想词：": "Associated words:",
+    "按照书名/关键字搜索": "Search by book title/keyword",
+    "共 {{total}} 本书籍": "{{Total}} books"
 }
