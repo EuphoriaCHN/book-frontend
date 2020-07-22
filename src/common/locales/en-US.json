@@ -19,5 +19,8 @@
     "获取图书列表失败": "Failed to get book list",
     "联想词：": "Associated words:",
     "按照书名/关键字搜索": "Search by book title/keyword",
-    "共 {{total}} 本书籍": "{{Total}} books"
+    "共 {{total}} 本书籍": "{{Total}} books",
+    "加载中...": "Loading...",
+    "获取书籍详情失败": "Failed to get book details",
+    "错误的 URL 参数，无法解析书籍信息": "Incorrect URL parameters, unable to parse book information"
 }
