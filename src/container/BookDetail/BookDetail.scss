@@ -1,0 +1,35 @@
+.book-detail {
+  padding: 10px 20px !important;
+  &-header {
+    margin-bottom: 12px;
+  }
+
+  &-content {
+    height: calc(100vh - 86px - 40px - 46px);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    &-sider {
+      height: 100%;
+      width: 250px;
+      border: 1px solid #ccc;
+      overflow: scroll;
+    }
+
+    &-main {
+      flex: 1;
+      height: 100%;
+      border: 1px solid;
+
+      > iframe {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+  .ant-tree-node-content-wrapper {
+    white-space: nowrap;
+  }
+}

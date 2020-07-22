@@ -14,7 +14,7 @@ interface IProps extends WithTranslation {
 const BookCard: React.SFC<IProps> = props => {
   const setBookModalVisible = React.useCallback(() => {
     ProjectStore.setBookModalVisible(true, props.book);
-  }, []);
+  }, [props.book]);
 
   const _title = React.useMemo<string>(() => (
     getBookTitle(props.book)
@@ -26,7 +26,7 @@ const BookCard: React.SFC<IProps> = props => {
         <p>{_title}</p>
       </div>
     </Tooltip>
-  ), [_title]);
+  ), [_title, setBookModalVisible]);
 
   return render;
 };

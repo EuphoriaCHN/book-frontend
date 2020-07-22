@@ -42,8 +42,12 @@ export const GET_BOOK_BY_ID = (query: I.IGetBookByID) => request({
 });
 
 export const MAKE_BOOK_IMAGE_URL = (query: I.IGetBookXmindImage) => {
-  if (query.mock) {
-    return `${window.location.protocol}/static/images/1001中华人民共和国安全生产法.png`;
-  }
+  // if (query.mock) {
+  //   return `${window.location.protocol}/static/images/1001中华人民共和国安全生产法.png`;
+  // }
   return `${window.location.protocol}/static/images/${query.imageName}.png`;
+};
+
+export const MAKE_PDF_URL = (query: { path: string; }) => {
+  return `/static/${query.path}`;
 };

@@ -31,7 +31,8 @@ const BookModal: React.SFC<IProps> = props => {
     const imageAddress = getBookTitle(book, true);
 
     // 获取图片 URL
-    const imageUrl = MAKE_BOOK_IMAGE_URL({ imageName: imageAddress, mock: true });
+    const imageUrl = MAKE_BOOK_IMAGE_URL({ imageName: imageAddress });
+    console.log(imageUrl);
     setImageUrl(imageUrl);
   }, []);
 
