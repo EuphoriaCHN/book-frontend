@@ -95,6 +95,7 @@ const Platform: React.SFC<IProps> = observer(props => {
   const handleOnPaginationChange = React.useCallback<
     (newCurrent: number, newPageSize: number) => void
   >((newCurrent, newPageSize) => {
+    console.log(newCurrent, newPageSize);
     setPageSize(newPageSize);
     setCurrentIndex(newCurrent);
     loadData(newPageSize, newCurrent);
@@ -195,6 +196,7 @@ const Platform: React.SFC<IProps> = observer(props => {
               current={currentIndex}
               pageSizeOptions={['12', '24', '36']}
               onChange={handleOnPaginationChange}
+              onShowSizeChange={handleOnPaginationChange}
               showTotal={total => props.t('共 {{total}} 本书籍', { total })}
               hideOnSinglePage
             />
