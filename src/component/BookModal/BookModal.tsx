@@ -5,6 +5,7 @@ import { Books } from 'container/Platform/Platform';
 import ProjectStore from 'store/project';
 import { MAKE_BOOK_IMAGE_URL } from 'api';
 import DztImageGalleryComponent from 'reactjs-image-gallery';
+import { useHistory } from 'react-router'
 
 import './BookModal.scss'
 
@@ -20,6 +21,8 @@ type ImageGalleryConfig = {
 };
 
 const BookModal: React.SFC<IProps> = props => {
+  const _history = useHistory();
+
   const [imageUrl, setImageUrl] = React.useState<string>('');
   const [thumbImageTooltipVisible, setThumbImageTooltipVisible] = React.useState<boolean>(false);
 
@@ -42,6 +45,13 @@ const BookModal: React.SFC<IProps> = props => {
 
   const handleCloseModal = React.useCallback<() => void>(() => {
     ProjectStore.setBookModalVisible(false);
+  }, []);
+
+  const handleRouteToBookDetail = React.useCallback<(book: Books) => void>(book => {
+    if (!book || !book.id) {
+      return;
+    }
+    _history.push(`/book/${book.id}`);
   }, []);
 
   const getBookTitle = React.useMemo<string>(() => {
@@ -78,7 +88,7 @@ const BookModal: React.SFC<IProps> = props => {
             </div>
           </Tooltip>
           <Tooltip title={props.t('阅读书籍')}>
-            <div className={'book-modal-content-book'}>
+            <div className={'book-modal-content-book'} onClick={handleRouteToBookDetail.bind(this, props.book)}>
               <div className={'book-modal-content-book-menu'}>{getBookTitle}</div>
               <div className={'book-modal-content-book-rope'} />
             </div>
