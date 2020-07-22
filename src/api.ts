@@ -32,9 +32,13 @@ const request: (params: AxiosRequest) => Promise<AxiosResponse<I.RESPONSE_DATA>>
   });
 
 export const GET_BOOK_LIST = (query: I.IGetBookList) => request({
-  method: 'get',
   url: `/book/getBookList`,
   params: query,
+});
+
+export const GET_BOOK_BY_ID = (query: I.IGetBookByID) => request({
+  url: '/book/getBookById',
+  params: query
 });
 
 export const MAKE_BOOK_IMAGE_URL = (query: I.IGetBookXmindImage) => {

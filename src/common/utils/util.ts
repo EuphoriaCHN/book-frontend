@@ -2,6 +2,7 @@ import { message } from 'antd';
 
 import { AxiosResponse } from 'axios';
 import { RESPONSE_DATA } from '../api.interface';
+import { Books } from 'container/Platform/Platform';
 
 export enum HTTP_STATUS_CODE {
   SUCCESS = 200,
@@ -90,4 +91,19 @@ export function debounce(func: Function, wait: number, immediate: boolean = fals
       func.apply(context, args);
     }
   };
+}
+
+/**
+ * 获取图书名称
+ * 
+ * @param {Books} book 书籍 or address
+ */
+export function getBookTitle(book: Books, includeNumber?: boolean): string {
+  if (!book) {
+    return '';
+  }
+  if (includeNumber) {
+    return book.address.split(/煤矿通用知识教材\/(\d+.*)\/.*/)[1].split('\/')[0];
+  }
+  return book.address.split(/煤矿通用知识教材\/\d+(.*)\/.*/)[1].split('\/')[0];
 }

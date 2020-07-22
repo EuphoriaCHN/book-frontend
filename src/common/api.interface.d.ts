@@ -10,6 +10,11 @@ export type IGetBookList = {
   limit?: number;
 };
 
+// GET BOOK BY ID
+export type IGetBookByID = {
+  id: string | number;
+};
+
 // GET BOOK XMIND IMAGE
 export type IGetBookXmindImage = {
   imageName: string;

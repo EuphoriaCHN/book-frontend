@@ -95,7 +95,6 @@ const Platform: React.SFC<IProps> = observer(props => {
   const handleOnPaginationChange = React.useCallback<
     (newCurrent: number, newPageSize: number) => void
   >((newCurrent, newPageSize) => {
-    console.log(newCurrent, newPageSize);
     setPageSize(newPageSize);
     setCurrentIndex(newCurrent);
     loadData(newPageSize, newCurrent);
