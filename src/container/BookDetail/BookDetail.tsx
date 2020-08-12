@@ -2,13 +2,22 @@ import * as React from 'react';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { RouteComponentProps } from 'react-router';
 import { Books } from 'container/Platform/Platform';
-import { message, Spin, Breadcrumb, Tree, Input } from 'antd';
+import {
+  message,
+  Spin,
+  Breadcrumb,
+  Tree,
+  Input,
+  Typography,
+  Tooltip,
+} from 'antd';
 import { GET_BOOK_BY_ID, MAKE_PDF_URL, GET_ONE_BOOK } from 'api';
 import { errHandling, getBookTitle } from '@utils/util';
 import { HomeOutlined, DownOutlined } from '@ant-design/icons';
 import { Key, EventDataNode, DataNode } from 'rc-tree/lib/interface';
 
 import './BookDetail.scss';
+import Modal from 'antd/lib/modal/Modal';
 
 export type BookDetailTreenode = {
   title: string;
@@ -35,14 +44,41 @@ const BookDetail: React.SFC<IProps> = (props) => {
   const [pdfUrl, setPdfUrl] = React.useState<string>('');
   const [expandedKeys, setExpandedKeys] = React.useState<Array<string>>([]);
   const [selectedKeys, setSelectedKeys] = React.useState<Array<string>>([]);
+  const [searchText, setSearchText] = React.useState<string>('');
+  const [otherBook, setOtherBook] = React.useState<Books>(null);
+  const [goOtherBookModalVisible, setGoOtherBookModalVisible] = React.useState<
+    boolean
+  >(false);
 
-  const onSearchCategory = React.useCallback<(value: string) => void>(
-    (value) => {
+  const onSearchCategory = React.useCallback<(searchText: string) => void>(
+    (searchText) => {
+      if (!searchText || !searchText.length) {
+        return;
+      }
       setLoading(true);
-      errHandling(GET_ONE_BOOK, { address: value })
+      errHandling(GET_ONE_BOOK, {
+        address: searchText,
+        bookId: props.match.params.bookId,
+      })
         .then(
-          (value: Books) => {
-            const { address } = value;
+          (value: { target: Books; other: Books }) => {
+            setSearchText(searchText);
+
+            if (!value.target) {
+              message.info(
+                props.t('《{{_book}}》 书籍中没有 "{{_addr}}" 章节', {
+                  _book: breadcrumbTitle,
+                  _addr: searchText,
+                })
+              );
+              if (value.other) {
+                // 在其他书中搜到了这个
+                setOtherBook(value.other);
+                setGoOtherBookModalVisible(true);
+              }
+              return;
+            }
+            const { address } = value.target;
             const keys: Array<string> = address.split(/\//);
             const _expandedKeys: Array<string> = [];
             for (let i = 0; i < keys.length; i++) {
@@ -53,7 +89,14 @@ const BookDetail: React.SFC<IProps> = (props) => {
               const before = _expandedKeys[i - 1];
               _expandedKeys.push(before.concat('/').concat(keys[i]));
             }
-            setSelectedKeys([_expandedKeys.pop()]);
+            const bookKey = _expandedKeys.pop();
+            console.log(bookKey);
+            const bookName: string = bookKey
+              .split(/\//)
+              .pop()
+              .split(/\.pdf$/)[0];
+            message.success(props.t('检索到 {{_book}}', { _book: bookName }));
+            setSelectedKeys([bookKey]);
             setExpandedKeys(_expandedKeys);
           },
           (reason: any) => {
@@ -65,8 +108,36 @@ const BookDetail: React.SFC<IProps> = (props) => {
           setLoading(false);
         });
     },
-    []
+    [breadcrumbTitle]
   );
+
+  const renderOtherBookText = React.useCallback<() => JSX.Element>(() => {
+    if (!otherBook) {
+      return null;
+    }
+    const linkHref = `/#/book/${otherBook.bookId}00000`;
+    const otherBookName: string = otherBook.address.split(/\//)[1];
+
+    return (
+      <React.Fragment>
+        <Typography.Text>
+          {props.t(
+            '虽然没有在 《{{_nowBook}}》 中找到 "{{_address}}" 关键字，但在',
+            {
+              _nowBook: breadcrumbTitle,
+              _address: searchText,
+            }
+          )}
+        </Typography.Text>
+        <Tooltip title={props.t('点击可打开新窗口')}>
+          <Typography.Link onClick={window.open.bind(this, linkHref)}>
+            《{otherBookName}》
+          </Typography.Link>
+        </Tooltip>
+        <Typography.Text>{props.t('中找到了！')}</Typography.Text>
+      </React.Fragment>
+    );
+  }, [otherBook, searchText]);
 
   const onTreeNodeExpand = React.useCallback<
     (
@@ -229,36 +300,55 @@ const BookDetail: React.SFC<IProps> = (props) => {
 
   const render = React.useMemo<JSX.Element>(
     () => (
-      <Spin spinning={loading} size={'large'}>
-        <div className={'book-detail container'}>
-          <header className={'book-detail-header'}>
-            <div>
-              <Breadcrumb>
-                <Breadcrumb.Item href="/#/platform">
-                  <HomeOutlined />
-                  <span>{props.t('书本列表')}</span>
-                </Breadcrumb.Item>
-                <Breadcrumb.Item>{breadcrumbTitle}</Breadcrumb.Item>
-              </Breadcrumb>
-            </div>
-            <div className={'book-detail-header-search'}>
-              <Input.Search
-                placeholder={props.t('搜索章节')}
-                onSearch={onSearchCategory}
-                allowClear
-              />
-            </div>
-          </header>
-          <div className={'book-detail-content'}>
-            <div className={'book-detail-content-sider'}>{renderTreeDOM}</div>
-            <div className={'book-detail-content-main'}>
-              <iframe src={pdfUrl} />
+      <React.Fragment>
+        <Spin spinning={loading} size={'large'}>
+          <div className={'book-detail container'}>
+            <header className={'book-detail-header'}>
+              <div>
+                <Breadcrumb>
+                  <Breadcrumb.Item href="/#/platform">
+                    <HomeOutlined />
+                    <span>{props.t('书本列表')}</span>
+                  </Breadcrumb.Item>
+                  <Breadcrumb.Item>{breadcrumbTitle}</Breadcrumb.Item>
+                </Breadcrumb>
+              </div>
+              <div className={'book-detail-header-search'}>
+                <Input.Search
+                  placeholder={props.t('搜索章节')}
+                  onSearch={onSearchCategory}
+                  allowClear
+                />
+              </div>
+            </header>
+            <div className={'book-detail-content'}>
+              <div className={'book-detail-content-sider'}>{renderTreeDOM}</div>
+              <div className={'book-detail-content-main'}>
+                <iframe src={pdfUrl} />
+              </div>
             </div>
           </div>
-        </div>
-      </Spin>
+        </Spin>
+        <Modal
+          visible={goOtherBookModalVisible}
+          onCancel={setGoOtherBookModalVisible.bind(this, false)}
+          okButtonProps={{ hidden: true }}
+          cancelText={props.t('取消')}
+          closeIcon={false}
+        >
+          {renderOtherBookText()}
+        </Modal>
+      </React.Fragment>
     ),
-    [loading, breadcrumbTitle, renderTreeDOM, pdfUrl]
+    [
+      loading,
+      breadcrumbTitle,
+      renderTreeDOM,
+      pdfUrl,
+      onSearchCategory,
+      goOtherBookModalVisible,
+      renderOtherBookText,
+    ]
   );
 
   return render;
