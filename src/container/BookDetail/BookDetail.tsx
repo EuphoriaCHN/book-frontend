@@ -35,6 +35,9 @@ interface IProps
   extends WithTranslation,
     RouteComponentProps<HistoryBookProps> {}
 
+let timer: number | null = null;
+const MAX_WAITTING = 1000 * 5; // PDF 加载最多等 5 s 的 loading 状态
+
 const BookDetail: React.SFC<IProps> = (props) => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [breadcrumbTitle, setBreadcrumbTitle] = React.useState<string>(
@@ -49,6 +52,8 @@ const BookDetail: React.SFC<IProps> = (props) => {
   const [goOtherBookModalVisible, setGoOtherBookModalVisible] = React.useState<
     boolean
   >(false);
+
+  const iframeRef = React.useRef<HTMLIFrameElement>(null);
 
   const onSearchCategory = React.useCallback<(searchText: string) => void>(
     (searchText) => {
@@ -90,7 +95,6 @@ const BookDetail: React.SFC<IProps> = (props) => {
               _expandedKeys.push(before.concat('/').concat(keys[i]));
             }
             const bookKey = _expandedKeys.pop();
-            console.log(bookKey);
             const bookName: string = bookKey
               .split(/\//)
               .pop()
@@ -239,6 +243,14 @@ const BookDetail: React.SFC<IProps> = (props) => {
       return;
     }
     loadData(bookId);
+
+    iframeRef.current.onload = function () {
+      setLoading(false);
+      if (timer) {
+        window.clearTimeout(timer);
+        timer = null;
+      }
+    };
   }, []);
 
   const getTreeNode = React.useCallback<
@@ -280,6 +292,14 @@ const BookDetail: React.SFC<IProps> = (props) => {
       // 获得具体 PDF address
       const { key: address } = info.node;
       setPdfUrl(MAKE_PDF_URL({ path: address as string }));
+      setLoading(true);
+      timer = window.setTimeout(() => {
+        message.warning(
+          props.t('PDF 加载可能过慢，请等待...也可以换其他的章节阅读')
+        );
+        timer = null;
+        setLoading(false);
+      }, MAX_WAITTING);
     }
   }, []);
 
@@ -324,7 +344,7 @@ const BookDetail: React.SFC<IProps> = (props) => {
             <div className={'book-detail-content'}>
               <div className={'book-detail-content-sider'}>{renderTreeDOM}</div>
               <div className={'book-detail-content-main'}>
-                <iframe src={pdfUrl} />
+                <iframe ref={iframeRef} src={pdfUrl} />
               </div>
             </div>
           </div>
