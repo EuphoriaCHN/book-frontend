@@ -18,9 +18,19 @@
     "阅读书籍": "Reading books",
     "获取图书列表失败": "Failed to get book list",
     "联想词：": "Associated words:",
-    "按照书名/关键字搜索": "Search by book title/keyword",
     "共 {{total}} 本书籍": "{{Total}} books",
     "加载中...": "Loading...",
     "获取书籍详情失败": "Failed to get book details",
-    "错误的 URL 参数，无法解析书籍信息": "Incorrect URL parameters, unable to parse book information"
+    "错误的 URL 参数，无法解析书籍信息": "Incorrect URL parameters, unable to parse book information",
+    "《{{_book}}》 书籍中没有 "{{_addr}}" 章节": ""{{_Book}}" There is no "{{_addr}}" chapter in the book",
+    "检索到 {{_book}}": "{{_Book}} retrieved",
+    "搜索图书失败！": "Failed to search for books!",
+    "虽然没有在 《{{_nowBook}}》 中找到 "{{_address}}" 关键字，但在": "Although the "{{_address}}" keyword was not found in "{{_nowBook}}", but in",
+    "点击可打开新窗口": "Click to open a new window",
+    "中找到了！": "Found it!",
+    "数据库中没有这本书": "The book is not in the database",
+    "PDF 加载可能过慢，请等待...也可以换其他的章节阅读": "PDF loading may be too slow, please wait...you can also read other chapters",
+    "搜索章节": "Search chapter",
+    "取消": "cancel",
+    "按照书名/关键字/章节搜索": "Search by title/keyword/chapter"
 }
