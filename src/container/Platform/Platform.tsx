@@ -209,10 +209,9 @@ const Platform: React.SFC<IProps> = observer((props) => {
             <h2>{props.t("书本列表")}</h2>
             <div className={"platform-header-operation"}>
               <Select
-                placeholder={props.t("按照书名/关键字搜索")}
+                placeholder={props.t("按照书名/关键字/章节搜索")}
                 onSearch={onSearch}
                 onChange={onSearchTextChange as any}
-                // onBlur={onSearchTextBlur}
                 autoClearSearchValue={false}
                 style={{ width: 300, height: 30 }}
                 loading={loading}
