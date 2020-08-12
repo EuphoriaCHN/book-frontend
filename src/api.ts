@@ -23,23 +23,33 @@ type AxiosRequest = {
 
 const prefix = '/api';
 
-const request: (params: AxiosRequest) => Promise<AxiosResponse<I.RESPONSE_DATA>> = (params) =>
+const request: (
+  params: AxiosRequest
+) => Promise<AxiosResponse<I.RESPONSE_DATA>> = (params) =>
   axios({
     method: params.method || 'get',
     url: `${prefix}${params.url}`,
     params: params.params || {},
-    data: params.data || {}
+    data: params.data || {},
   });
 
-export const GET_BOOK_LIST = (query: I.IGetBookList) => request({
-  url: `/book/getBookList`,
-  params: query,
-});
+export const GET_BOOK_LIST = (query: I.IGetBookList) =>
+  request({
+    url: `/book/getBookList`,
+    params: query,
+  });
 
-export const GET_BOOK_BY_ID = (query: I.IGetBookByID) => request({
-  url: '/book/getBookById',
-  params: query
-});
+export const GET_BOOK_BY_ID = (query: I.IGetBookByID) =>
+  request({
+    url: '/book/getBookById',
+    params: query,
+  });
+
+export const GET_ONE_BOOK = (query: I.IGetOneBook) =>
+  request({
+    url: '/book/getOneBook',
+    params: query,
+  });
 
 export const MAKE_BOOK_IMAGE_URL = (query: I.IGetBookXmindImage) => {
   // if (query.mock) {
@@ -48,6 +58,6 @@ export const MAKE_BOOK_IMAGE_URL = (query: I.IGetBookXmindImage) => {
   return `${window.location.protocol}/static/images/${query.imageName}.png`;
 };
 
-export const MAKE_PDF_URL = (query: { path: string; }) => {
+export const MAKE_PDF_URL = (query: { path: string }) => {
   return `/static/${query.path}`;
 };

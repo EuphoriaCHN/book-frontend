@@ -15,6 +15,11 @@ export type IGetBookByID = {
   id: string | number;
 };
 
+// GET ONE BOOK
+export type IGetOneBook = {
+  address?: string;
+};
+
 // GET BOOK XMIND IMAGE
 export type IGetBookXmindImage = {
   imageName: string;
