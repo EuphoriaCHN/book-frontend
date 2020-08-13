@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import { Input, Tooltip, Spin, message, Table, Tag } from 'antd';
+import { Input, Tooltip, message, Table, Tag } from 'antd';
 import { QuestionCircleFilled } from '@ant-design/icons';
 import { Books } from 'container/Platform/Platform';
 import { GET_CHAPTER } from 'api';
@@ -31,6 +31,10 @@ const SearchDetail: React.SFC<IProps> = (props) => {
     if (!value || !value.length) {
       setTotal(0);
       setData([]);
+      return;
+    }
+    if (/^[\d ]+$/.test(value)) {
+      message.error(props.t('不能搜索纯数字哦'));
       return;
     }
     setLoading(true);
@@ -96,6 +100,11 @@ const SearchDetail: React.SFC<IProps> = (props) => {
   const renderTableAddress = React.useCallback<(value: string) => JSX.Element>(
     (value) => {
       value = value.split(/^煤矿通用知识教材\//)[1];
+      value = value
+        .split('')
+        .filter((c) => /[\d\. ]/.test(c) === false)
+        .join('')
+        .split(/(?:pdf)$/)[0];
 
       const index = value.lastIndexOf(searchText);
       if (index === -1) {
@@ -136,7 +145,7 @@ const SearchDetail: React.SFC<IProps> = (props) => {
           if (!record[key] || !record[key].length) {
             return;
           }
-          if (record[key].indexOf(searchText) !== -1) {
+          if (record[key].indexOf(searchText) !== -1 && searchText.length) {
             if (record[key].length !== searchText.length) {
               elements.push({ val: record[key], color: 'orange' });
             } else {
@@ -176,7 +185,7 @@ const SearchDetail: React.SFC<IProps> = (props) => {
         render: renderTableKeywords,
       },
     ],
-    [renderTableAddress, renderTableKeywords]
+    [renderTableAddress, renderTableKeywords, props.i18n.language]
   );
 
   const getTableScrollHeight =
@@ -195,36 +204,35 @@ const SearchDetail: React.SFC<IProps> = (props) => {
 
   const render = React.useMemo<JSX.Element>(
     () => (
-      <Spin spinning={loading}>
-        <div className={'search-detail container'}>
-          <header className={'search-detail-header'}>
-            <h2>{props.t('章节搜索')}</h2>
-            <div className={'search-detail-header-search'}>
-              <Input.Search
-                placeholder={props.t('搜索章节')}
-                onSearch={onSearchCategory}
-                onChange={(event) => setSearchText(event.target.value)}
-                value={searchText}
-                allowClear
-                autoFocus
-              />
-              <Tooltip title={props.t('根据章节名称 / 关键词搜寻章节')}>
-                <QuestionCircleFilled />
-              </Tooltip>
-            </div>
-          </header>
-          <div className={'search-detail-content'}>
-            <Table
-              columns={tableColumn}
-              dataSource={data}
-              pagination={getPaginationProps}
-              scroll={{ y: getTableScrollHeight }}
-              onRow={onRow}
-              rowClassName={'search-detail-content-table-row'}
+      <div className={'search-detail container'}>
+        <header className={'search-detail-header'}>
+          <h2>{props.t('章节搜索')}</h2>
+          <div className={'search-detail-header-search'}>
+            <Input.Search
+              placeholder={props.t('搜索章节')}
+              onSearch={onSearchCategory}
+              onChange={(event) => setSearchText(event.target.value)}
+              value={searchText}
+              allowClear
+              autoFocus
             />
+            <Tooltip title={props.t('根据章节名称 / 关键词搜寻章节')}>
+              <QuestionCircleFilled />
+            </Tooltip>
           </div>
+        </header>
+        <div className={'search-detail-content'}>
+          <Table
+            columns={tableColumn}
+            dataSource={data}
+            pagination={getPaginationProps}
+            scroll={{ y: getTableScrollHeight }}
+            onRow={onRow}
+            loading={loading}
+            rowClassName={'search-detail-content-table-row'}
+          />
         </div>
-      </Spin>
+      </div>
     ),
     [
       loading,
@@ -233,6 +241,7 @@ const SearchDetail: React.SFC<IProps> = (props) => {
       tableColumn,
       getTableScrollHeight,
       searchText,
+      props.i18n.language,
     ]
   );
 
