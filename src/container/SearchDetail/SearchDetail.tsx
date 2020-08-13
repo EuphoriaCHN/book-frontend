@@ -87,7 +87,6 @@ const SearchDetail: React.SFC<IProps> = (props) => {
       pageSize: pageSize,
       total: total,
       showTotal: (total) => props.t('共 {{total}} 本书籍', { total }),
-      hideOnSinglePage: true,
       onChange: handleOnPaginationChange,
       onShowSizeChange: handleOnPaginationChange,
     }),
