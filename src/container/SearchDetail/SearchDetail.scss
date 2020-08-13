@@ -1,0 +1,30 @@
+.search-detail {
+  &-header {
+    margin-bottom: 32px;
+
+    &-search {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-top: 8px;
+      width: 380px;
+
+      > *:first-child {
+        margin-right: 14px;
+      }
+    }
+  }
+
+  &-matching-text {
+    display: inline-block;
+    margin: 0 2px;
+    background-color: rgba(251, 255, 43, 0.4);
+    border-bottom: 1px dashed #ccc;
+  }
+
+  &-content {
+    &-table-row {
+      cursor: pointer;
+    }
+  }
+}

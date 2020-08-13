@@ -45,6 +45,12 @@ export const GET_BOOK_BY_ID = (query: I.IGetBookByID) =>
     params: query,
   });
 
+export const GET_CHAPTER = (query: I.IGetChapter) =>
+  request({
+    url: '/book/getChapter',
+    params: query,
+  });
+
 export const GET_ONE_CHAPTER = (query: I.IGetOneChapter) =>
   request({
     url: '/book/getOneChapter',
