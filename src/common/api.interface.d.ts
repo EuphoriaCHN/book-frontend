@@ -16,7 +16,7 @@ export type IGetBookByID = {
 };
 
 // GET ONE BOOK
-export type IGetOneBook = {
+export type IGetOneChapter = {
   address?: string;
 };
 

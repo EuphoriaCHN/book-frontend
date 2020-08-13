@@ -11,10 +11,11 @@ import {
   Typography,
   Tooltip,
 } from 'antd';
-import { GET_BOOK_BY_ID, MAKE_PDF_URL, GET_ONE_BOOK } from 'api';
+import { GET_BOOK_BY_ID, MAKE_PDF_URL, GET_ONE_CHAPTER } from 'api';
 import { errHandling, getBookTitle } from '@utils/util';
 import { HomeOutlined, DownOutlined } from '@ant-design/icons';
 import { Key, EventDataNode, DataNode } from 'rc-tree/lib/interface';
+import url from 'url';
 
 import './BookDetail.scss';
 import Modal from 'antd/lib/modal/Modal';
@@ -55,13 +56,40 @@ const BookDetail: React.SFC<IProps> = (props) => {
 
   const iframeRef = React.useRef<HTMLIFrameElement>(null);
 
+  const handleExpandNode = React.useCallback<
+    (address: string, log?: boolean) => void
+  >((address, log = false) => {
+    const keys: Array<string> = address.split(/\//);
+    const _expandedKeys: Array<string> = [];
+    for (let i = 0; i < keys.length; i++) {
+      if (i === 0) {
+        _expandedKeys.push(keys[i]);
+        continue;
+      }
+      const before = _expandedKeys[i - 1];
+      _expandedKeys.push(before.concat('/').concat(keys[i]));
+    }
+    const bookKey = _expandedKeys.pop();
+
+    if (log) {
+      const bookName: string = bookKey
+        .split(/\//)
+        .pop()
+        .split(/\.pdf$/)[0];
+      message.success(props.t('检索到 {{_book}}', { _book: bookName }));
+    }
+
+    setSelectedKeys([bookKey]);
+    setExpandedKeys(_expandedKeys);
+  }, []);
+
   const onSearchCategory = React.useCallback<(searchText: string) => void>(
     (searchText) => {
       if (!searchText || !searchText.length) {
         return;
       }
       setLoading(true);
-      errHandling(GET_ONE_BOOK, {
+      errHandling(GET_ONE_CHAPTER, {
         address: searchText,
         bookId: props.match.params.bookId,
       })
@@ -83,25 +111,7 @@ const BookDetail: React.SFC<IProps> = (props) => {
               }
               return;
             }
-            const { address } = value.target;
-            const keys: Array<string> = address.split(/\//);
-            const _expandedKeys: Array<string> = [];
-            for (let i = 0; i < keys.length; i++) {
-              if (i === 0) {
-                _expandedKeys.push(keys[i]);
-                continue;
-              }
-              const before = _expandedKeys[i - 1];
-              _expandedKeys.push(before.concat('/').concat(keys[i]));
-            }
-            const bookKey = _expandedKeys.pop();
-            const bookName: string = bookKey
-              .split(/\//)
-              .pop()
-              .split(/\.pdf$/)[0];
-            message.success(props.t('检索到 {{_book}}', { _book: bookName }));
-            setSelectedKeys([bookKey]);
-            setExpandedKeys(_expandedKeys);
+            handleExpandNode(value.target.address, true);
           },
           (reason: any) => {
             message.error(props.t('搜索图书失败！'));
@@ -210,46 +220,86 @@ const BookDetail: React.SFC<IProps> = (props) => {
     return data;
   }, []);
 
-  const loadData = React.useCallback<(id: string) => Promise<unknown>>(
-    async (id) => {
-      setLoading(true);
-      try {
-        const data: Array<Books> = await errHandling(GET_BOOK_BY_ID, { id });
+  const loadData = React.useCallback<
+    (id: string) => Promise<BookDetailTreenode>
+  >(async (id) => {
+    setLoading(true);
+    try {
+      const data: Array<Books> = await errHandling(GET_BOOK_BY_ID, { id });
 
-        if (!data.length) {
-          throw new Error(props.t('数据库中没有这本书'));
-        }
-
-        const firstBook = data[0];
-        setBreadcrumbTitle(getBookTitle(firstBook));
-
-        const treeData = constructTreeData(data);
-        setTreeData(treeData);
-      } catch (error) {
-        message.error(props.t('获取书籍详情失败'));
-        message.error(error.message);
-      } finally {
-        setLoading(false);
+      if (!data.length) {
+        throw new Error(props.t('数据库中没有这本书'));
       }
-    },
-    []
-  );
+
+      const firstBook = data[0];
+      setBreadcrumbTitle(getBookTitle(firstBook));
+
+      const treeData = constructTreeData(data);
+      setTreeData(treeData);
+
+      return Promise.resolve(treeData);
+    } catch (error) {
+      message.error(props.t('获取书籍详情失败'));
+      message.error(error.message);
+      return Promise.reject(error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   // Component did mount
   React.useEffect(() => {
     const { bookId } = props.match.params;
     if (!bookId) {
       message.error(props.t('错误的 URL 参数，无法解析书籍信息'));
-      return;
+      return undefined;
     }
-    loadData(bookId);
+    loadData(bookId).then(
+      async (value) => {
+        const urlObject = url.parse(props.location.search, true);
+        if (!urlObject.query) {
+          return;
+        }
+        // Query 章节 id
+        const chapter: string = urlObject.query.chapter as string;
+        // 自动展开对应的章节
+        // 根据章节 id 搜索 address
+        try {
+          const data: { target: Books; other: Books } = await errHandling(
+            GET_ONE_CHAPTER,
+            {
+              chapterId: chapter,
+            }
+          );
+          const chapterInfo = data.target;
 
-    iframeRef.current.onload = function () {
+          if (!chapterInfo) {
+            message.error(props.t('query 参数中章节 id 错误！'));
+            return;
+          }
+
+          handleExpandNode(chapterInfo.address);
+        } catch (error) {
+          console.error(error);
+          message.error(props.t('根据 query 参数获取章节信息失败！'));
+        }
+      },
+      (reason) => {}
+    );
+
+    // 监听 iframe 加载
+    const onIframeLoad = function () {
       setLoading(false);
       if (timer) {
         window.clearTimeout(timer);
         timer = null;
       }
+    };
+
+    iframeRef.current.onload = onIframeLoad;
+
+    return () => {
+      iframeRef.current.onload = null;
     };
   }, []);
 
