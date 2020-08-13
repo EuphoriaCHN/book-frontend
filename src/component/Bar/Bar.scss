@@ -1,26 +1,7 @@
 .bar {
-  position: relative;
+  display: flex;
+  justify-content: space-between;
   width: 100%;
-  height: 140px;
-  perspective: 1200;
-  margin-bottom: 14px;
-
-  &-books {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: space-around;
-    perspective: 1400;
-  }
-
-  &-bottom {
-    position: absolute;
-    width: 100%;
-    height: 60px;
-    bottom: 0;
-    transform: rotateX(60deg);
-    background: linear-gradient(90deg, transparent, rgba(212, 183, 100, 0.9), transparent);
-    box-shadow: 0 10px 10px 2px rgba(0, 0, 0, 0.2);
-    z-index: -1;
-  }
+  height: 290px;
+  margin-bottom: 20px;
 }

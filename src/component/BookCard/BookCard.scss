@@ -1,54 +1,31 @@
 .book-card {
-  position: relative;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  height: 110px;
-  width: 95px;
+  height: 100%;
+  width: 17%;
   padding: 8px 10px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  box-shadow: 2px 0px 2px #242424;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  writing-mode: tb-rl;
-  text-align: center;
   cursor: pointer;
-  transition: all 0.3s ease-in-out;
-  transform: translateZ(20px) rotateY(-30deg);
-  background: linear-gradient(90deg, #e6dbcb, #d9c9b3);
-  z-index: 2;
+  transition: all 0.4s ease-in-out;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
 
-  &:before {
-    content: "";
-    position: absolute;
-    z-index: 2;
-    bottom: -10px;
+  &-image {
     width: 100%;
-    height: 0;
-    box-shadow: 0 0 30px 5px #000;
-    transition: all 0.3s ease-in-out;
+    height: 210px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 
-  > p {
-    height: 90%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-weight: 700;
+  &-info {
+    width: 100%;
+    height: 50px;
   }
 
   &:hover {
-    transform: translateZ(20px) rotateY(-30deg) translateY(-10px);
-
-    &:before {
-      content: "";
-      position: absolute;
-      z-index: 2;
-      bottom: -10px;
-      width: 100%;
-      height: 0;
-      box-shadow: 0 0 30px 5px #fff;
-    }
+    box-shadow: 0 0 6px 3px rgba(0, 0, 0, .15);
   }
 }

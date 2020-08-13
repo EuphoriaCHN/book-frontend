@@ -30,5 +30,6 @@ export type IGetOneChapter = {
 // GET BOOK XMIND IMAGE
 export type IGetBookXmindImage = {
   imageName: string;
+  extra?: string;
   mock?: boolean;
 };

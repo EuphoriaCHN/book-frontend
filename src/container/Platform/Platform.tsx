@@ -1,14 +1,14 @@
-import * as React from "react";
-import { withTranslation, WithTranslation } from "react-i18next";
-import { Pagination, Spin, Empty, message, Select, Tag } from "antd";
-import Bar from "component/Bar/Bar";
-import { GET_BOOK_LIST } from "api";
-import { errHandling, debounce } from "@utils/util";
-import { observer } from "mobx-react";
-import ProjectStore from "store/project";
-import BookModal from "component/BookModal/BookModal";
+import * as React from 'react';
+import { withTranslation, WithTranslation } from 'react-i18next';
+import { Pagination, Spin, Empty, message, Select, Tag } from 'antd';
+import Bar from 'component/Bar/Bar';
+import { GET_BOOK_LIST } from 'api';
+import { errHandling, debounce } from '@utils/util';
+import { observer } from 'mobx-react';
+import ProjectStore from 'store/project';
+import BookModal from 'component/BookModal/BookModal';
 
-import "./Platform.scss";
+import './Platform.scss';
 
 type IProps = WithTranslation;
 
@@ -34,8 +34,11 @@ export type Books = {
   keyword3: string;
 };
 
+// 一行内摆多少本书
+const MAX_BOOK_IN_LINE = 5;
+
 const Platform: React.SFC<IProps> = observer((props) => {
-  const [pageSize, setPageSize] = React.useState<number>(12);
+  const [pageSize, setPageSize] = React.useState<number>(10);
   const [currentIndex, setCurrentIndex] = React.useState<number>(1);
   const [total, setTotal] = React.useState<number>(0);
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -45,7 +48,7 @@ const Platform: React.SFC<IProps> = observer((props) => {
   );
   const [keywordDict, setKeywordDict] = React.useState<KeywordDictionary>({});
   const [selectKeywordID, setSelectKeywordID] = React.useState<number>(0);
-  const [searchValue, setSearchValue] = React.useState<string>("");
+  const [searchValue, setSearchValue] = React.useState<string>('');
 
   const loadData = React.useCallback<
     (
@@ -54,7 +57,7 @@ const Platform: React.SFC<IProps> = observer((props) => {
       _searchText?: string
     ) => Promise<unknown>
   >(
-    async (_pageSize, _currentIndex, _searchText = "") => {
+    async (_pageSize, _currentIndex, _searchText = '') => {
       setLoading(true);
       const limit = _pageSize || pageSize;
       const offset = ((_currentIndex || currentIndex) - 1) * pageSize;
@@ -80,7 +83,7 @@ const Platform: React.SFC<IProps> = observer((props) => {
           setSelectKeywordID(_default);
         }
       } catch (error) {
-        message.error(props.t("获取图书列表失败"));
+        message.error(props.t('获取图书列表失败'));
         message.error(error.message);
         console.error(error);
       } finally {
@@ -97,10 +100,16 @@ const Platform: React.SFC<IProps> = observer((props) => {
 
   const renderBarList = React.useMemo<Array<JSX.Element>>(
     () =>
-      Array(Math.ceil(data.length / 4))
+      Array(Math.ceil(data.length / MAX_BOOK_IN_LINE))
         .fill(1)
         .map((_, index: number) => (
-          <Bar key={index} books={data.slice(index * 4, index * 4 + 4)} />
+          <Bar
+            key={index}
+            books={data.slice(
+              index * MAX_BOOK_IN_LINE,
+              index * MAX_BOOK_IN_LINE + MAX_BOOK_IN_LINE
+            )}
+          />
         )),
     [pageSize, currentIndex, data]
   );
@@ -141,7 +150,7 @@ const Platform: React.SFC<IProps> = observer((props) => {
   >(
     (key, record) => {
       if (!record) {
-        handleDebounceSearch("");
+        handleDebounceSearch('');
         setSelectKeywordID(0);
       } else {
         setSelectKeywordID(parseInt(record.key));
@@ -183,8 +192,8 @@ const Platform: React.SFC<IProps> = observer((props) => {
         }
         return (
           <Tag
-            color={"processing"}
-            style={{ cursor: "pointer" }}
+            color={'processing'}
+            style={{ cursor: 'pointer' }}
             onClick={handleClickAssociationDictionary.bind(this, asso)}
           >
             {asso}
@@ -195,7 +204,7 @@ const Platform: React.SFC<IProps> = observer((props) => {
 
     return (
       <div>
-        <span>{props.t("联想词：")}</span>
+        <span>{props.t('联想词：')}</span>
         {elementArray}
       </div>
     );
@@ -204,12 +213,12 @@ const Platform: React.SFC<IProps> = observer((props) => {
   const render = React.useMemo<JSX.Element>(
     () => (
       <React.Fragment>
-        <div className={"platform container"}>
-          <header className={"platform-header"}>
-            <h2>{props.t("书本列表")}</h2>
-            <div className={"platform-header-operation"}>
+        <div className={'platform container'}>
+          <header className={'platform-header'}>
+            <h2>{props.t('书本列表')}</h2>
+            <div className={'platform-header-operation'}>
               <Select
-                placeholder={props.t("按照书名/关键字/章节搜索")}
+                placeholder={props.t('按照书名/关键字/章节搜索')}
                 onSearch={onSearch}
                 onChange={onSearchTextChange as any}
                 autoClearSearchValue={false}
@@ -221,7 +230,7 @@ const Platform: React.SFC<IProps> = observer((props) => {
                 defaultActiveFirstOption={false}
                 allowClear
                 showSearch
-                value={searchValue === "" ? null : searchValue}
+                value={searchValue === '' ? null : searchValue}
               >
                 {renderSearchOptions}
               </Select>
@@ -229,16 +238,16 @@ const Platform: React.SFC<IProps> = observer((props) => {
             </div>
           </header>
           <Spin spinning={loading}>
-            <div className={"platform-content"}>{renderDataCollection}</div>
-            <footer className={"platform-footer"}>
+            <div className={'platform-content'}>{renderDataCollection}</div>
+            <footer className={'platform-footer'}>
               <Pagination
                 total={total}
                 pageSize={pageSize}
                 current={currentIndex}
-                pageSizeOptions={["12", "24", "36"]}
+                pageSizeOptions={['10', '15', '20']}
                 onChange={handleOnPaginationChange}
                 onShowSizeChange={handleOnPaginationChange}
-                showTotal={(total) => props.t("共 {{total}} 本书籍", { total })}
+                showTotal={(total) => props.t('共 {{total}} 本书籍', { total })}
                 hideOnSinglePage
               />
             </footer>

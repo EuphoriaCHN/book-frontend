@@ -62,7 +62,9 @@ export const MAKE_BOOK_IMAGE_URL = (query: I.IGetBookXmindImage) => {
   // if (query.mock) {
   //   return `${window.location.protocol}/static/images/1001中华人民共和国安全生产法.png`;
   // }
-  return `${window.location.protocol}${staticPrefix}/images/${query.imageName}.png`;
+  return `${window.location.protocol}${staticPrefix}/images/${
+    query.imageName
+  }.${query.extra || 'png'}`;
 };
 
 export const MAKE_PDF_URL = (query: { path: string }) => {
