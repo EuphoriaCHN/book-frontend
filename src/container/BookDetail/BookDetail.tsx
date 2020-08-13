@@ -79,6 +79,8 @@ const BookDetail: React.SFC<IProps> = (props) => {
       message.success(props.t('检索到 {{_book}}', { _book: bookName }));
     }
 
+    setLoading(true);
+    setPdfUrl(MAKE_PDF_URL({ path: address }));
     setSelectedKeys([bookKey]);
     setExpandedKeys(_expandedKeys);
   }, []);
