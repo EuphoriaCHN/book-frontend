@@ -56,6 +56,11 @@ const BookDetail: React.SFC<IProps> = (props) => {
 
   const iframeRef = React.useRef<HTMLIFrameElement>(null);
 
+  const changeChapterIdOnRoute = React.useCallback<(chapterId: number) => void>(
+    (chapterId) => {},
+    []
+  );
+
   const handleExpandNode = React.useCallback<
     (address: string, log?: boolean) => void
   >((address, log = false) => {
@@ -114,6 +119,7 @@ const BookDetail: React.SFC<IProps> = (props) => {
               return;
             }
             handleExpandNode(value.target.address, true);
+            changeChapterIdOnRoute(value.target.id);
           },
           (reason: any) => {
             message.error(props.t('搜索图书失败！'));
