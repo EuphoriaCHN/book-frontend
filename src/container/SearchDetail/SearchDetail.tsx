@@ -106,19 +106,20 @@ const SearchDetail: React.SFC<IProps> = (props) => {
         .join('')
         .split(/(?:pdf)$/)[0];
 
-      const index = value.lastIndexOf(searchText);
+      const index = value.toLowerCase().lastIndexOf(searchText.toLowerCase());
       if (index === -1) {
         return <span>{value}</span>;
       }
       const length = searchText.length;
 
       const forward = value.slice(0, index);
+      const target = value.slice(index, index + length);
       const backword = value.slice(index + length);
 
       return (
         <span>
           {forward}
-          <span className={'search-detail-matching-text'}>{searchText}</span>
+          <span className={'search-detail-matching-text'}>{target}</span>
           {backword}
         </span>
       );
@@ -145,7 +146,12 @@ const SearchDetail: React.SFC<IProps> = (props) => {
           if (!record[key] || !record[key].length) {
             return;
           }
-          if (record[key].indexOf(searchText) !== -1 && searchText.length) {
+          if (
+            (record[key] as string)
+              .toLowerCase()
+              .indexOf(searchText.toLowerCase()) !== -1 &&
+            searchText.length
+          ) {
             if (record[key].length !== searchText.length) {
               elements.push({ val: record[key], color: 'orange' });
             } else {
